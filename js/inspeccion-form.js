@@ -1,16 +1,15 @@
-import { db, collection, addDoc, serverTimestamp, storage, ref, uploadBytes, getDownloadURL } from './firebase-config.js';
+// js/inspeccion-form.js
+import { db, collection, addDoc, serverTimestamp } from './firebase-config.js';
+import { subirMultiplesImgBB } from './imgbb-upload.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const edificioId = urlParams.get('edificioId');
 
-// Cargar nombre del edificio
+// Cargar nombre del edificio (simplificado)
 document.addEventListener('DOMContentLoaded', async () => {
     if (!edificioId) { alert('Falta ID del edificio'); return; }
-    // Obtener nombre desde Firestore o data local
-    // (simplificado: asumimos que ya está en el DOM)
     document.getElementById('edificioNombre').value = edificioId;
     
-    // Fecha y hora por defecto
     const now = new Date();
     document.getElementById('fechaInspeccion').value = now.toISOString().split('T')[0];
     document.getElementById('horaInspeccion').value = now.toTimeString().slice(0,5);
@@ -55,9 +54,9 @@ document.getElementById('btnAgregarElemento')?.addEventListener('click', () => {
         </div>
     `;
     container.appendChild(div);
-    // Eliminar elemento
+    
     div.querySelector('.btn-eliminar-elemento').addEventListener('click', () => div.remove());
-    // Agregar daño dentro del elemento
+    
     div.querySelector('.btn-agregar-dano').addEventListener('click', function() {
         const contenedorDaños = this.parentElement;
         const row = document.createElement('div');
@@ -80,7 +79,7 @@ document.getElementById('btnAgregarElemento')?.addEventListener('click', () => {
 // Envío del formulario
 document.getElementById('formInspeccion').addEventListener('submit', async (e) => {
     e.preventDefault();
-    // Recopilar datos del evaluador
+    
     const evaluador = {
         nombre: document.getElementById('evalNombre').value,
         cedula: document.getElementById('evalCedula').value,
@@ -91,13 +90,22 @@ document.getElementById('formInspeccion').addEventListener('submit', async (e) =
     const hora = document.getElementById('horaInspeccion').value;
     const obs = document.getElementById('obsGenerales').value;
     
-    // Imágenes generales
+    // --- SUBIR IMÁGENES GENERALES a ImgBB ---
     const filesGen = document.getElementById('imgGenerales').files;
-    const urlsGen = await subirImagenes(filesGen, `inspecciones/${edificioId}/generales`);
+    let urlsGen = [];
+    if (filesGen.length > 0) {
+        try {
+            urlsGen = await subirMultiplesImgBB(filesGen);
+        } catch (error) {
+            alert('Error al subir imágenes generales: ' + error.message);
+            return;
+        }
+    }
     
     // Recorrer elementos
     const elementos = [];
-    document.querySelectorAll('.elemento-card').forEach(card => {
+    const cards = document.querySelectorAll('.elemento-card');
+    for (const card of cards) {
         const elem = {
             nomenclatura: card.querySelector('[name="nomenclatura"]').value,
             nivel: card.querySelector('[name="nivel"]').value,
@@ -123,11 +131,18 @@ document.getElementById('formInspeccion').addEventListener('submit', async (e) =
                 });
             }
         });
-        // Imágenes del elemento
+        // --- SUBIR IMÁGENES DEL ELEMENTO a ImgBB ---
         const filesElem = card.querySelector('[name="imgElemento"]').files;
-        // (Subir imágenes y guardar URLs, similar a generales)
+        if (filesElem.length > 0) {
+            try {
+                elem.imagenes = await subirMultiplesImgBB(filesElem);
+            } catch (error) {
+                alert('Error al subir imágenes del elemento ' + elem.nomenclatura + ': ' + error.message);
+                return;
+            }
+        }
         elementos.push(elem);
-    });
+    }
 
     // Guardar en Firestore
     try {
@@ -142,20 +157,9 @@ document.getElementById('formInspeccion').addEventListener('submit', async (e) =
             timestamp: serverTimestamp()
         };
         await addDoc(collection(db, "inspecciones"), data);
-        alert('Inspección guardada exitosamente. ¡Puedes imprimir el reporte desde el historial!');
+        alert('✅ Inspección guardada exitosamente.');
         window.location.href = `edificio.html?id=${edificioId}`;
     } catch (err) {
-        alert('Error guardando: ' + err.message);
+        alert('Error guardando en Firestore: ' + err.message);
     }
 });
-
-async function subirImagenes(files, pathBase) {
-    const urls = [];
-    for (const file of files) {
-        const storageRef = ref(storage, `${pathBase}/${Date.now()}_${file.name}`);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
-        urls.push(url);
-    }
-    return urls;
-}
