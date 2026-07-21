@@ -1,6 +1,6 @@
 // js/imgbb-upload.js
 // Configuración: reemplaza con tu API key de ImgBB
-const IMGBB_API_KEY = 'TU_API_KEY_DE_IMGBB'; // <--- PON AQUÍ TU CLAVE
+const IMGBB_API_KEY = '6794c43135c6020dceb1e47ef192ff66'; // <--- PON AQUÍ TU CLAVE
 
 /**
  * Sube un archivo (imagen) a ImgBB y devuelve la URL pública.
