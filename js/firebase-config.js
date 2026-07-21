@@ -6,12 +6,13 @@ import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gsta
 
 // 🔥 REEMPLAZA ESTOS DATOS CON LOS DE TU PROYECTO FIREBASE 🔥
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_PROJECT.firebaseapp.com",
-    projectId: "TU_PROJECT",
-    storageBucket: "TU_PROJECT.appspot.com",
-    messagingSenderId: "XXXXXXXXXX",
-    appId: "1:XXXXXXXXXX:web:XXXXXXXXXXXX"
+  apiKey: "AIzaSyBlVNCFiorRmKgUuzPbbiLHAatsBiDl2G0",
+  authDomain: "fase-ii-copred.firebaseapp.com",
+  projectId: "fase-ii-copred",
+  storageBucket: "fase-ii-copred.firebasestorage.app",
+  messagingSenderId: "941466034940",
+  appId: "1:941466034940:web:9c0ba8e97e4022b03bed79",
+  measurementId: "G-328HRS2HXK"
 };
 
 // Inicializar
