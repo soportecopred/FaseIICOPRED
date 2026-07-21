@@ -1,31 +1,31 @@
-import { db, collection, getDocs, query, where, orderBy, onAuthStateChanged, auth, signInAnonymously } from './firebase-config.js';
+// js/app.js
+import { db, collection, getDocs, setDoc, doc } from './firebase-config.js';
 import { edificiosData } from './data-edificios.js';
 
 let edificiosCache = [];
 
-// Cargar o sincronizar edificios con Firestore
-async function sincronizarEdificios() {
+// Cargar edificios desde Firestore o datos locales
+async function cargarEdificios() {
     try {
-        const colRef = collection(db, "edificios");
-        const snap = await getDocs(colRef);
-        
-        if (snap.empty) {
-            // Si no hay datos, cargar los del CSV
-            console.log("Cargando edificios iniciales...");
-            for (const ed of edificiosData) {
-                const docRef = doc(db, "edificios", ed.id);
-                await setDoc(docRef, ed);
-            }
-            console.log("Edificios cargados exitosamente.");
-            edificiosCache = edificiosData;
-        } else {
+        const snap = await getDocs(collection(db, "edificios"));
+        if (!snap.empty) {
+            // Si hay datos en Firestore, usarlos
             edificiosCache = snap.docs.map(doc => doc.data());
+            console.log('Edificios cargados desde Firestore:', edificiosCache.length);
+        } else {
+            // Si no hay datos, cargar los locales y guardarlos en Firestore
+            console.log('Cargando edificios desde datos locales...');
+            edificiosCache = edificiosData;
+            // Guardar en Firestore
+            for (const ed of edificiosData) {
+                await setDoc(doc(db, "edificios", ed.id), ed);
+            }
+            console.log('Edificios guardados en Firestore.');
         }
         renderizarEdificios(edificiosCache);
         document.getElementById('totalEdificios').textContent = edificiosCache.length;
     } catch (error) {
-        console.error("Error sincronizando edificios:", error);
-        // Fallback a datos locales
+        console.error('Error cargando edificios, usando datos locales:', error);
         edificiosCache = edificiosData;
         renderizarEdificios(edificiosCache);
         document.getElementById('totalEdificios').textContent = edificiosCache.length;
@@ -35,6 +35,7 @@ async function sincronizarEdificios() {
 // Renderizar tarjetas
 function renderizarEdificios(lista) {
     const contenedor = document.getElementById('contenedorEdificios');
+    if (!contenedor) return;
     contenedor.innerHTML = '';
     
     if (lista.length === 0) {
@@ -82,18 +83,27 @@ function aplicarFiltros() {
     renderizarEdificios(filtrados);
 }
 
-// Event listeners
+// Event listeners al cargar la página
 document.addEventListener('DOMContentLoaded', () => {
-    sincronizarEdificios();
+    cargarEdificios();
     
-    document.getElementById('buscador').addEventListener('input', aplicarFiltros);
-    document.getElementById('filtroPrioridad').addEventListener('change', aplicarFiltros);
-    document.getElementById('filtroEstatus').addEventListener('change', aplicarFiltros);
-    document.getElementById('btnBuscar').addEventListener('click', aplicarFiltros);
+    // Listeners para filtros
+    const buscador = document.getElementById('buscador');
+    const filtroPrioridad = document.getElementById('filtroPrioridad');
+    const filtroEstatus = document.getElementById('filtroEstatus');
+    const btnBuscar = document.getElementById('btnBuscar');
     
-    // Botón Nueva Inspección: redirige a una vista general o a un modal (por ahora a edificio)
-    document.getElementById('btnNuevaInspeccion').addEventListener('click', () => {
-        // Podríamos mostrar un modal para seleccionar edificio, pero simplificamos:
-        alert('Selecciona un edificio desde la lista para agregar una inspección.');
-    });
+    if (buscador) buscador.addEventListener('input', aplicarFiltros);
+    if (filtroPrioridad) filtroPrioridad.addEventListener('change', aplicarFiltros);
+    if (filtroEstatus) filtroEstatus.addEventListener('change', aplicarFiltros);
+    if (btnBuscar) btnBuscar.addEventListener('click', aplicarFiltros);
+    
+    // Botón Nueva Inspección
+    const btnNueva = document.getElementById('btnNuevaInspeccion');
+    if (btnNueva) {
+        btnNueva.addEventListener('click', () => {
+            // Podrías mostrar un modal para seleccionar edificio, o redirigir a un listado
+            alert('Selecciona un edificio desde la lista para agregar una inspección.');
+        });
+    }
 });
