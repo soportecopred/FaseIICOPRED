@@ -1,0 +1,72 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.card-edificio {
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border-left: 5px solid #0d6efd;
+}
+.card-edificio:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.card-edificio .badge-prioridad {
+    font-size: 0.75rem;
+}
+.prioridad-I { border-left-color: #dc3545; }
+.prioridad-II { border-left-color: #ffc107; }
+.prioridad-III { border-left-color: #198754; }
+.prioridad-Pendiente { border-left-color: #6c757d; opacity: 0.7; }
+
+.detalle-header {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.cajetin-datos {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.cajetin-datos table td {
+    padding: 6px 0;
+}
+.cajetin-datos .label {
+    font-weight: 600;
+    color: #495057;
+    width: 140px;
+}
+
+/* Para el canvas de marcado */
+#canvas-container {
+    border: 2px dashed #ced4da;
+    border-radius: 8px;
+    background: #f1f3f5;
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+}
+#canvas-container canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+.toolbar-marcador {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+/* Reporte impresión */
+@media print {
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    body { background: white; }
+    .card { box-shadow: none !important; border: 1px solid #ddd; }
+    .detalle-header { background: #0d6efd !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
