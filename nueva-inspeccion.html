@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCV - Nueva Inspección</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="history.back()"><i class="fas fa-arrow-left"></i> Volver</a>
+            <span class="navbar-text text-white">Nueva Inspección</span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <form id="formInspeccion">
+            <!-- Datos del evaluador (obligatorios) -->
+            <div class="card mb-3">
+                <div class="card-header bg-light">Datos del Evaluador</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3"><input type="text" class="form-control" id="evalNombre" placeholder="Nombre completo" required></div>
+                        <div class="col-md-2"><input type="text" class="form-control" id="evalCedula" placeholder="Cédula"></div>
+                        <div class="col-md-3"><input type="email" class="form-control" id="evalCorreo" placeholder="Correo"></div>
+                        <div class="col-md-4"><input type="text" class="form-control" id="evalInstitucion" placeholder="Institución / Cargo"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fecha y hora -->
+            <div class="row mb-3">
+                <div class="col-md-4"><label>Fecha</label><input type="date" class="form-control" id="fechaInspeccion" required></div>
+                <div class="col-md-4"><label>Hora</label><input type="time" class="form-control" id="horaInspeccion" required></div>
+                <div class="col-md-4"><label>Edificio</label><input type="text" class="form-control" id="edificioNombre" readonly></div>
+            </div>
+
+            <!-- Observaciones generales e imágenes -->
+            <div class="card mb-3">
+                <div class="card-header bg-light">Observaciones Generales</div>
+                <div class="card-body">
+                    <textarea class="form-control" id="obsGenerales" rows="3"></textarea>
+                    <label class="mt-2">Imágenes generales:</label>
+                    <input type="file" class="form-control" id="imgGenerales" multiple accept="image/*">
+                </div>
+            </div>
+
+            <!-- Elementos dañados (dinámico) -->
+            <div class="card mb-3">
+                <div class="card-header bg-light d-flex justify-content-between">
+                    <span>Elementos Dañados</span>
+                    <button type="button" class="btn btn-sm btn-success" id="btnAgregarElemento"><i class="fas fa-plus"></i> Agregar Elemento</button>
+                </div>
+                <div class="card-body" id="contenedorElementos">
+                    <!-- Los elementos se agregan aquí con JS -->
+                    <p class="text-muted">No hay elementos agregados.</p>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100"><i class="fas fa-save"></i> Guardar Inspección</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/inspeccion-form.js"></script>
+</body>
+</html>

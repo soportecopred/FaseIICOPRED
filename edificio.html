@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCV - Detalle del Edificio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-arrow-left"></i> Volver al listado</a>
+            <span class="navbar-text text-white" id="tituloEdificio">Cargando...</span>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Datos generales -->
+        <div id="infoGeneral" class="detalle-header">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 id="edNombre">-</h2>
+                    <p><strong>ID:</strong> <span id="edId">-</span></p>
+                    <p><strong>Prioridad:</strong> <span id="edPrioridad" class="badge bg-danger">-</span></p>
+                    <p><strong>Estatus:</strong> <span id="edEstatus" class="badge bg-secondary">-</span></p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light btn-lg" id="btnNuevaInspeccion"><i class="fas fa-plus-circle"></i> Nueva Inspección</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daños y acciones -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="cajetin-datos">
+                    <h5><i class="fas fa-exclamation-triangle text-danger"></i> Daños detectados</h5>
+                    <p id="edDanios">-</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="cajetin-datos">
+                    <h5><i class="fas fa-tools text-primary"></i> Acciones inmediatas</h5>
+                    <p id="edAcciones">-</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plano y marcado -->
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <i class="fas fa-map"></i> Plano del Edificio <span class="badge bg-info">Sube un JPG/PNG para marcarlo</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="file" class="form-control" id="inputPlano" accept="image/*">
+                        <button class="btn btn-outline-primary mt-2" id="btnCargarPlano"><i class="fas fa-upload"></i> Subir plano</button>
+                        <button class="btn btn-outline-danger mt-2" id="btnLimpiarMarcas"><i class="fas fa-eraser"></i> Limpiar marcas</button>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <small>Herramientas de marcado:</small>
+                        <button class="btn btn-sm btn-outline-secondary" id="herramientaCirculo"><i class="fas fa-circle"></i> Círculo</button>
+                        <button class="btn btn-sm btn-outline-secondary" id="herramientaFlecha"><i class="fas fa-arrow-right"></i> Flecha</button>
+                        <button class="btn btn-sm btn-outline-secondary" id="herramientaTexto"><i class="fas fa-font"></i> Texto</button>
+                        <button class="btn btn-sm btn-outline-danger" id="herramientaBorrar"><i class="fas fa-trash"></i> Borrar</button>
+                    </div>
+                </div>
+                <div id="canvas-container" class="mt-3">
+                    <canvas id="canvasPlano" width="800" height="600"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de inspecciones -->
+        <div class="card">
+            <div class="card-header bg-light">
+                <i class="fas fa-history"></i> Historial de Inspecciones
+            </div>
+            <div class="card-body">
+                <div id="listadoInspecciones">
+                    <p class="text-muted">Cargando inspecciones...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Fabric.js para marcado -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/edificio.js"></script>
+</body>
+</html>
